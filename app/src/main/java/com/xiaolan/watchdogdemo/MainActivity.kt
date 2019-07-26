@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.util.Log
 import android.view.View
+import android.widget.Toast
 import kotlinx.android.synthetic.main.activity_main.*
 import java.io.File
 import java.io.FileInputStream
@@ -19,6 +20,10 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
     override fun onClick(v: View?) {
         when (v?.id) {
             R.id.btn_read_watchdog -> {
+                if (!DevicesUtil.isRoot()) {
+                    Toast.makeText(this,"没有root权限",Toast.LENGTH_SHORT).show()
+                    return
+                }
                 val sb = StringBuilder()
                 //打开文件输入流
                 val inputStream = FileInputStream(filename)
@@ -35,8 +40,11 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
                 btn_read_watchdog.text = sb.toString()
             }
             R.id.btn_close_watchdog -> {
+                if (!DevicesUtil.isRoot()) {
+                    Toast.makeText(this,"没有root权限",Toast.LENGTH_SHORT).show()
+                    return
+                }
                 val file = File(filename)
-
                 //检查访问权限，如果没有读写权限，进行文件操作，修改文件访问权限
                 if (!file.canRead() || !file.canWrite()) {
                     try {
